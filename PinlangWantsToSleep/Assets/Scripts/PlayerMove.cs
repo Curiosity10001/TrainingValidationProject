@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class PlayerMove : MonoBehaviour
 
 
     float lastJump;
+    float startFall;
 
 
 
@@ -49,12 +51,17 @@ public class PlayerMove : MonoBehaviour
     [Header("Animation && Animator")]
     public Animator animator;
 
+    #region GameObjectDestroy
+    GameOverScript destroy;
+    #endregion
+
 
 
     private void Awake()
     {
         rgbd = GetComponent<Rigidbody>();
         timer += Time.deltaTime;
+        destroy = FindObjectOfType<GameOverScript>();
 
     }
     // Start is called before the first frame update
@@ -75,7 +82,9 @@ public class PlayerMove : MonoBehaviour
         AnimationStateActivation();
         Grounded();
         JumpAndFall();
-       
+        Debug.Log("on the ground value " + onTheGround .y);
+        Debug.Log("pinlang y value " + moveDirection.y);
+        
 
     }
     void AnimationStateActivation()
@@ -107,25 +116,28 @@ public class PlayerMove : MonoBehaviour
     }
     private void FixedUpdate()
     {
-      
-
-        //Direction of movement 
-        moveDirection = new Vector3(axisX, 0, axisZ);
+        //Direction of movement relative to Camera
+        moveDirection = Camera.main.transform.right * axisX + Camera.main.transform.forward*axisZ;
 
         // As long as nothing impact velocity the rigidbodystays on ground
         moveDirection.y = rgbd.velocity.y;
 
         // rgbd velocity 
         rgbd.velocity = new Vector3(moveDirection.x * speed, moveDirection.y, moveDirection.z * speed) ;
-        Debug.Log(rgbd.velocity);
+        Debug.Log("rgbd y position " + rgbd.position.y);
 
-        //to rotate body to wanted point
-        rotationLookAt = Quaternion.LookRotation(new Vector3(axisX, 0, axisZ));
-        rgbd.MoveRotation(rotationLookAt);
+        //the condition makes it possible for the player to turn while moving toward direction of movement but stay in the last angle registred on Idle
+        if(rgbd.velocity.x != 0 || rgbd.velocity.y != 0)
+        {
+            //to rotate body to wanted point relative to camera 
+            rotationLookAt = Quaternion.LookRotation(new Vector3(moveDirection.x, 0, moveDirection.z));
+            rgbd.MoveRotation(rotationLookAt);
 
-        //to regulate the speed of rotation
-        turnSpeed = Quaternion.RotateTowards(rgbd.rotation, rotationLookAt, rotationSpeed * Time.fixedDeltaTime);
-        rgbd.rotation = turnSpeed;
+            //to regulate the speed of rotation
+            turnSpeed = Quaternion.RotateTowards(rgbd.rotation, rotationLookAt, rotationSpeed * Time.fixedDeltaTime);
+            rgbd.rotation = turnSpeed;
+        }
+        
   
 
     }
@@ -145,18 +157,17 @@ public class PlayerMove : MonoBehaviour
             onTheGround = touchGround1.point;
         }
 
-        // Rigid body Y position comparison to know if grounded /falling /jumping (+1 because Y of player is in the middle of the rigidbody) (+- 0.1 is tolerance)
-        if (rgbd.position.y <= onTheGround.y +1+ 0.1f && rgbd.position.y >= onTheGround.y +1 - 0.1f)
+        // Rigid body Y position comparison to know if grounded /falling /jumping  (+- 0.1 is tolerance)
+        if (rgbd.position.y <= onTheGround.y + 0.1f && rgbd.position.y >= onTheGround.y  - 0.1f)
         {
             isGrounded = true;
             isJumping = false;
             isFalling = false;
-
         }
         else
         {
+            rgbd.AddForce(Vector3.down * downForce);  
             isGrounded = false;
-            rgbd.AddForce(Vector3.down * downForce);
         }   
         
     }
@@ -170,37 +181,39 @@ public class PlayerMove : MonoBehaviour
             lastJump = Time.time;
             isGrounded = false;
             isFalling = false;
+            
         }
 
          //Jump +land
-        if (rgbd.position.y > onTheGround.y+1 + 0.5f && timer > lastJump && timer < lastJump + jumpDuration && rgbd.velocity.y != 0)
+        if (rgbd.position.y >= onTheGround.y + 0.2f && timer > lastJump && timer < lastJump + jumpDuration && rgbd.velocity.y != 0)
         {
-            rgbd.AddForce(Vector3.down * downForce);
             isJumping = true;
             isFalling = false;
             isGrounded = false;
+           
         }
 
         //Fall+land
-        if (rgbd.position.y <= onTheGround.y+1 + 0.4f && rgbd.position.y >= onTheGround.y +1 + 0.3f && !isJumping)
+        if (((rgbd.position.y >= onTheGround.y + 0.2f  || rgbd.position.y <= onTheGround.y - 0.2f ) && timer > lastJump + jumpDuration && !isJumping))
         {
+            startFall = Time.time;
             rgbd.AddForce(Vector3.down * downForce);
             isFalling = true;
             isGrounded = false;
+            isJumping = false;
         }
-    }
 
-
-    private void OnTriggerEnter(Collider other)
-    {
-        //Trigger collider added to avoid sticking to walls
-        if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        if ((rgbd.position.y <= onTheGround.y  - 15f) || timer >= startFall + 40f && isFalling )
         {
-            rgbd.AddForce(Vector3.down * downForce);
+            //destroys self
+            destroy.DestroyPlayer(gameObject);
         }
+
+
     }
 
-
+   
+    
 
 }
 
