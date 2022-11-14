@@ -55,11 +55,14 @@ public class PlayerMove : MonoBehaviour
     GameOverScript destroy;
     #endregion
 
+    [Header("Collider interractions")]
+    Collider playerCollider;
 
 
     private void Awake()
     {
         rgbd = GetComponent<Rigidbody>();
+        playerCollider = GetComponent<Collider>();
         timer += Time.deltaTime;
         destroy = FindObjectOfType<GameOverScript>();
 
@@ -82,8 +85,7 @@ public class PlayerMove : MonoBehaviour
         AnimationStateActivation();
         Grounded();
         JumpAndFall();
-        Debug.Log("on the ground value " + onTheGround .y);
-        Debug.Log("pinlang y value " + moveDirection.y);
+       
         
 
     }
@@ -127,8 +129,9 @@ public class PlayerMove : MonoBehaviour
         Debug.Log("rgbd y position " + rgbd.position.y);
 
         //the condition makes it possible for the player to turn while moving toward direction of movement but stay in the last angle registred on Idle
-        if(rgbd.velocity.x != 0 || rgbd.velocity.y != 0)
+        if(axisX != 0 || axisZ != 0)
         {
+            Debug.Log("commence à tourner");
             //to rotate body to wanted point relative to camera 
             rotationLookAt = Quaternion.LookRotation(new Vector3(moveDirection.x, 0, moveDirection.z));
             rgbd.MoveRotation(rotationLookAt);
@@ -136,19 +139,40 @@ public class PlayerMove : MonoBehaviour
             //to regulate the speed of rotation
             turnSpeed = Quaternion.RotateTowards(rgbd.rotation, rotationLookAt, rotationSpeed * Time.fixedDeltaTime);
             rgbd.rotation = turnSpeed;
+            Debug.Log("devarait arreter de  tourner");
         }
         
   
 
     }
 
+    //this is to make sure it fall if no contact with ground
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.layer != LayerMask.NameToLayer("Ground"))
+        {
+            isGrounded = false;
+        }
+        else isGrounded = true;
+    
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            isGrounded = false;
+        }
+        
+    }
+
     public void Grounded()
     {
         // Rays to detect Ground
         rayToGround1 = new Ray(frontRightRay.position, Vector3.down);
-      
+       
 
-        //Bool to  know that a collider has been hit 
+        //Bool to  know that a collider has been hit          
         HitGround1 = Physics.Raycast(rayToGround1, out touchGround1, maxDistance, LayerMask.GetMask("Ground"));
        
         //If  hit get the information of the center of the 4 points : it will be our comparison point to know if we are grounded
@@ -158,9 +182,8 @@ public class PlayerMove : MonoBehaviour
         }
 
         // Rigid body Y position comparison to know if grounded /falling /jumping  (+- 0.1 is tolerance)
-        if (rgbd.position.y <= onTheGround.y + 0.1f && rgbd.position.y >= onTheGround.y  - 0.1f)
+        if ((rgbd.position.y <= onTheGround.y + 0.1f && rgbd.position.y >= onTheGround.y - 0.1f) && isGrounded)
         {
-            isGrounded = true;
             isJumping = false;
             isFalling = false;
         }
@@ -171,6 +194,9 @@ public class PlayerMove : MonoBehaviour
         }   
         
     }
+  
+
+
     void JumpAndFall()
     {
         //Jump
@@ -203,7 +229,7 @@ public class PlayerMove : MonoBehaviour
             isJumping = false;
         }
 
-        if ((rgbd.position.y <= onTheGround.y  - 15f) || timer >= startFall + 40f && isFalling )
+        if ((rgbd.position.y <= onTheGround.y  - 15f) || timer >= startFall + 90f && isFalling )
         {
             //destroys self
             destroy.DestroyPlayer(gameObject);
@@ -213,7 +239,7 @@ public class PlayerMove : MonoBehaviour
     }
 
    
-    
+
 
 }
 

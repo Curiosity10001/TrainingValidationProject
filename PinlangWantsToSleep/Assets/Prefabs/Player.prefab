@@ -66,9 +66,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timer: 0
-  speed: 5
+  speed: 10
   rotationSpeed: 100
-  jumpForce: 5
+  jumpForce: 15
   isJumping: 0
   jumpDuration: 0.03
   downForce: 2.5
