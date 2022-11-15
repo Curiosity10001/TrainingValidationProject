@@ -5,22 +5,24 @@ using UnityEngine.UI;
 
 public class PlayerMove : MonoBehaviour
 {
-    Vector3 moveDirection;
-    Rigidbody rgbd;
+    
 
     [Header(" Public Parameter for multi-scrip")]
     public float timer = 0;
 
+    #region Player move parameters
     [Header("Movement & Rotation Parameters")]
     [SerializeField] float speed = 5f;
     [SerializeField] float rotationSpeed = 0.5f;
-
+    Vector3 moveDirection;
+    Rigidbody rgbd;
     float axisX;
     float axisZ;
     Quaternion rotationLookAt;
     Quaternion turnSpeed;
+    #endregion
 
-
+    #region Jump parameters
     [Header("Jump & Fall parameter")]
     [SerializeField] float jumpForce = 5f;
     [SerializeField] bool isJumping = false;
@@ -33,8 +35,9 @@ public class PlayerMove : MonoBehaviour
     float lastJump;
     float startFall;
 
+    #endregion
 
-
+    #region Floor detection parameters
     [Header("Floor Detection")]
     [SerializeField] bool isGrounded = false;
     [SerializeField] float maxDistance = 20f;
@@ -45,19 +48,21 @@ public class PlayerMove : MonoBehaviour
     RaycastHit touchGround1;
     Ray rayToGround1;
     bool HitGround1;
-    
+    #endregion
 
-
+    #region Animation paarmeters
     [Header("Animation && Animator")]
     public Animator animator;
+    #endregion
 
     #region GameObjectDestroy
     GameOverScript destroy;
     #endregion
 
+    #region Collider of player
     [Header("Collider interractions")]
     Collider playerCollider;
-
+    #endregion
 
     private void Awake()
     {
@@ -79,6 +84,7 @@ public class PlayerMove : MonoBehaviour
     {
         timer += Time.deltaTime;
 
+        //gets inputs for mouvement
         axisZ = Input.GetAxis("Vertical");
         axisX = Input.GetAxis("Horizontal");
 
@@ -126,12 +132,10 @@ public class PlayerMove : MonoBehaviour
 
         // rgbd velocity 
         rgbd.velocity = new Vector3(moveDirection.x * speed, moveDirection.y, moveDirection.z * speed) ;
-        Debug.Log("rgbd y position " + rgbd.position.y);
 
         //the condition makes it possible for the player to turn while moving toward direction of movement but stay in the last angle registred on Idle
         if(axisX != 0 || axisZ != 0)
         {
-            Debug.Log("commence à tourner");
             //to rotate body to wanted point relative to camera 
             rotationLookAt = Quaternion.LookRotation(new Vector3(moveDirection.x, 0, moveDirection.z));
             rgbd.MoveRotation(rotationLookAt);
@@ -139,7 +143,6 @@ public class PlayerMove : MonoBehaviour
             //to regulate the speed of rotation
             turnSpeed = Quaternion.RotateTowards(rgbd.rotation, rotationLookAt, rotationSpeed * Time.fixedDeltaTime);
             rgbd.rotation = turnSpeed;
-            Debug.Log("devarait arreter de  tourner");
         }
         
   
@@ -147,35 +150,40 @@ public class PlayerMove : MonoBehaviour
     }
 
     //this is to make sure it fall if no contact with ground
-    private void OnCollisionStay(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer != LayerMask.NameToLayer("Ground"))
+        //if Grounded palyer becomes child to plateform : Resolve issue of staying on Moving plateforms
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            isGrounded = false;
-        }
-        else isGrounded = true;
-    
+            transform.parent = collision.gameObject.transform;
+            isGrounded = true;
+        } 
+
+
     }
 
     private void OnCollisionExit(Collision collision)
     {
+        //Resolves the falling and corrects physics - before the player could walk on Air now he falls as he should
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             isGrounded = false;
+            //Becomes independent GameObject with no parent
+            transform.parent = transform.transform;
         }
         
     }
 
     public void Grounded()
     {
-        // Rays to detect Ground
+        // Ray to detect Ground
         rayToGround1 = new Ray(frontRightRay.position, Vector3.down);
        
 
         //Bool to  know that a collider has been hit          
         HitGround1 = Physics.Raycast(rayToGround1, out touchGround1, maxDistance, LayerMask.GetMask("Ground"));
        
-        //If  hit get the information of the center of the 4 points : it will be our comparison point to know if we are grounded
+        //If  hit get the information of hitposition
         if (HitGround1 )
         {
             onTheGround = touchGround1.point;
@@ -189,7 +197,7 @@ public class PlayerMove : MonoBehaviour
         }
         else
         {
-            rgbd.AddForce(Vector3.down * downForce);  
+            rgbd.AddForce(Vector3.down * downForce);  // chosen Gravity during fall
             isGrounded = false;
         }   
         
@@ -202,6 +210,7 @@ public class PlayerMove : MonoBehaviour
         //Jump
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
+            transform.parent = transform.transform;
             isJumping = true;
             rgbd.AddForce(Vector2.up * jumpForce, ForceMode.Impulse);
             lastJump = Time.time;
@@ -213,6 +222,7 @@ public class PlayerMove : MonoBehaviour
          //Jump +land
         if (rgbd.position.y >= onTheGround.y + 0.2f && timer > lastJump && timer < lastJump + jumpDuration && rgbd.velocity.y != 0)
         {
+            transform.parent = transform.transform;
             isJumping = true;
             isFalling = false;
             isGrounded = false;
@@ -222,6 +232,7 @@ public class PlayerMove : MonoBehaviour
         //Fall+land
         if (((rgbd.position.y >= onTheGround.y + 0.2f  || rgbd.position.y <= onTheGround.y - 0.2f ) && timer > lastJump + jumpDuration && !isJumping))
         {
+            transform.parent = transform.transform;
             startFall = Time.time;
             rgbd.AddForce(Vector3.down * downForce);
             isFalling = true;
@@ -229,7 +240,7 @@ public class PlayerMove : MonoBehaviour
             isJumping = false;
         }
 
-        if ((rgbd.position.y <= onTheGround.y  - 15f) || timer >= startFall + 90f && isFalling )
+        if ((rgbd.position.y <= onTheGround.y  - 60f) || timer >= startFall + 90f && isFalling )
         {
             //destroys self
             destroy.DestroyPlayer(gameObject);

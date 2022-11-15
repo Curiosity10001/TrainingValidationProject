@@ -31,6 +31,8 @@ public class GameOverScript : MonoBehaviour
     {
         
     }
+
+    //Stops time in game and calls game over interfacce
     public void DestroyPlayer( GameObject PlayerToDestroy)
     {
         Destroy(PlayerToDestroy);
@@ -40,6 +42,7 @@ public class GameOverScript : MonoBehaviour
     }
     public void RestartGame()
     {
+        //Restart game/level
         SceneManager.LoadScene("InitialScene");
         Time.timeScale = 1;
     }
