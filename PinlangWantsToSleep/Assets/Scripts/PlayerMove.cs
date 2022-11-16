@@ -144,23 +144,24 @@ public class PlayerMove : MonoBehaviour
             turnSpeed = Quaternion.RotateTowards(rgbd.rotation, rotationLookAt, rotationSpeed * Time.fixedDeltaTime);
             rgbd.rotation = turnSpeed;
         }
-        
-  
+
+
 
     }
 
     //this is to make sure it fall if no contact with ground
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
-        //if Grounded palyer becomes child to plateform : Resolve issue of staying on Moving plateforms
+        //if Grounded transform of player becomes child to plateform : Resolve issue of staying on Moving plateforms
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            transform.parent = collision.gameObject.transform;
+            transform.SetParent(collision.gameObject.transform, true);
             isGrounded = true;
-        } 
+        }
 
 
     }
+
 
     private void OnCollisionExit(Collision collision)
     {
@@ -169,7 +170,7 @@ public class PlayerMove : MonoBehaviour
         {
             isGrounded = false;
             //Becomes independent GameObject with no parent
-            transform.parent = transform.transform;
+            transform.SetParent(null, true);
         }
         
     }
@@ -210,7 +211,7 @@ public class PlayerMove : MonoBehaviour
         //Jump
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            transform.parent = transform.transform;
+            transform.SetParent(null, true);
             isJumping = true;
             rgbd.AddForce(Vector2.up * jumpForce, ForceMode.Impulse);
             lastJump = Time.time;
@@ -219,10 +220,11 @@ public class PlayerMove : MonoBehaviour
             
         }
 
+
          //Jump +land
         if (rgbd.position.y >= onTheGround.y + 0.2f && timer > lastJump && timer < lastJump + jumpDuration && rgbd.velocity.y != 0)
         {
-            transform.parent = transform.transform;
+            transform.SetParent(null, true);
             isJumping = true;
             isFalling = false;
             isGrounded = false;
@@ -232,7 +234,7 @@ public class PlayerMove : MonoBehaviour
         //Fall+land
         if (((rgbd.position.y >= onTheGround.y + 0.2f  || rgbd.position.y <= onTheGround.y - 0.2f ) && timer > lastJump + jumpDuration && !isJumping))
         {
-            transform.parent = transform.transform;
+            transform.SetParent(null, true);
             startFall = Time.time;
             rgbd.AddForce(Vector3.down * downForce);
             isFalling = true;
