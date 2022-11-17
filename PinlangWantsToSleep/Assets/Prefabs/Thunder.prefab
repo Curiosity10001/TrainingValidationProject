@@ -5021,7 +5021,7 @@ ParticleSystemForceField:
     m_GravityCurve:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 3
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -5491,16 +5491,16 @@ GameObject:
   - component: {fileID: 7370965963318562443}
   - component: {fileID: 5542289437792059405}
   - component: {fileID: 3204026129220686490}
-  - component: {fileID: 7954574314000418904}
   - component: {fileID: 2232163134288690636}
-  - component: {fileID: 2352676389724897249}
   - component: {fileID: 2994359088143449857}
+  - component: {fileID: 207867955035352915}
+  - component: {fileID: 5214269919295153578}
   m_Layer: 0
   m_Name: Thunder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1916323523445853767
 Transform:
@@ -5510,8 +5510,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9173277822693005025}
   m_LocalRotation: {x: -0.32953176, y: -0.25889173, z: -0.7467981, w: 0.5164073}
-  m_LocalPosition: {x: -5.128004, y: 0.20011988, z: -5.051342}
-  m_LocalScale: {x: 20, y: 250, z: 20}
+  m_LocalPosition: {x: -3.11, y: -0.51, z: -4.95}
+  m_LocalScale: {x: 10, y: 20, z: 15}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8821298428042718294}
@@ -6140,10 +6140,10 @@ MonoBehaviour:
     m_PackMargin: 20
     m_AngleError: 8
     m_AreaError: 15
-  m_PreserveMeshAssetOnDestroy: 0
+  m_PreserveMeshAssetOnDestroy: 1
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 485
+  m_VersionIndex: 491
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -6220,14 +6220,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &7954574314000418904
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9173277822693005025}
-  m_Mesh: {fileID: 0}
 --- !u!64 &2232163134288690636
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -6242,26 +6234,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!95 &2352676389724897249
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9173277822693005025}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3cae947a3a9894f4fbe9c96f37fc0f90, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &2994359088143449857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6274,4 +6246,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8b0a8adb2d31eb49863a9f22465d177, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedThunder: 1.2
+--- !u!54 &207867955035352915
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9173277822693005025}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 1
+--- !u!33 &5214269919295153578
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9173277822693005025}
+  m_Mesh: {fileID: 0}

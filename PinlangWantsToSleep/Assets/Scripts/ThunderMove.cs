@@ -4,21 +4,30 @@ using UnityEngine;
 
 public class ThunderMove : MonoBehaviour
 {
-    [SerializeField] float speedThunder;
-
     bool hitPlayer = false;
     bool hitOther = false;
 
-    Animator animator;
-
     PlayerMove timer;
     float SpawnTime;
+    float hit;
 
+    GameObject explosion;
+    Explosion newPos;
+    Rigidbody rgbdThunder;
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
+        newPos = FindObjectOfType<Explosion>();
+        explosion = GameObject.Find("Explosion");
         timer = FindObjectOfType<PlayerMove>();
+        rgbdThunder = GetComponent<Rigidbody>();
+
+
+        if (explosion.activeInHierarchy)
+        {
+            explosion.SetActive(false);
+        }
+        
     }
     // Start is called before the first frame update
     void Start()
@@ -29,31 +38,42 @@ public class ThunderMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        animator.SetBool("hitPlayer", hitPlayer);
-        animator.SetBool("hitOther", hitOther);
-
-        if (timer.timer >= SpawnTime + 30)
+        if ( hitOther )
         {
+            if(timer.timer >= hit + 15)
+            {
             Destroy(gameObject);
+            }                     
+        } else if (hitPlayer)
+        {
+            if(timer.timer >= hit + 5)
+            {
+                newPos.NewTransform(gameObject.transform);
+                explosion.SetActive(true);
+                Destroy(gameObject);
+            }
         }
     }
     private void FixedUpdate()
     {
-        transform.Translate(Vector3.down * speedThunder);
+        
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+       
         if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
-        {
-            hitPlayer = true;
-            Destroy(gameObject);
+        {  
+            hit = Time.time;
+            hitPlayer = true; 
         }
 
         if(collision.gameObject.layer != LayerMask.NameToLayer("Player"))
-        {
-            hitOther = true;
-            Destroy(gameObject);
+        {          
+            hit = Time.time;
+            hitOther = true;        
         }
+
+        Debug.Log("hitOther" + hitOther + "hit" + hit);
     }
 }
