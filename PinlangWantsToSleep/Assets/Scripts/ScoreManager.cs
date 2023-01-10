@@ -7,14 +7,21 @@ using UnityEngine.Animations;
 public class ScoreManager : MonoBehaviour
 {
     #region Other scripts parameters
-    RewardBestowment captured;
-    ThunderMove hit;
+    RewardBestowment[] capturedscripts;
+    RewardBestowment capturedBool;
     #endregion
 
     [Header("Score Card parameters")]
-    public float sleepiness;
-    public float sleepQuality;
-    
+    public Image playerSleepinessBar;
+
+    float sleepiness;
+    float maxSleepiness = 1;
+
+    private void Awake()
+    {
+        capturedscripts = FindObjectsOfType<RewardBestowment>();
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +32,18 @@ public class ScoreManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        Debug.Log(sleepiness);
         
+    }
+
+    public void Sleepiness()
+    {
+         sleepiness += maxSleepiness / (capturedscripts.Length );
+         playerSleepinessBar.fillAmount = sleepiness;
+         if(sleepiness == maxSleepiness)
+        {
+
+        }
     }
 }

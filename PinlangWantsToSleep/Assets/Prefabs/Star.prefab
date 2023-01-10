@@ -4829,7 +4829,7 @@ GameObject:
   - component: {fileID: 9146552270059350921}
   - component: {fileID: 9146552270059350920}
   - component: {fileID: 8047307401146303417}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Star
   m_TagString: Untagged
   m_Icon: {fileID: 0}

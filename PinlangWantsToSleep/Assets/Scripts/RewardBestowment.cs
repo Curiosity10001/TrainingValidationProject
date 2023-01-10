@@ -16,9 +16,12 @@ public class RewardBestowment : MonoBehaviour
     [SerializeField] float speedFree = 5f;
     [SerializeField] float deltaTimeDirectionchange = 5f;
 
+    ScoreManager sleepyLangScore;
 
 
-    bool captured = false;
+    public bool captured = false;
+   
+
     float time;
     PlayerMove timer;
     Vector3 randomPos;
@@ -28,6 +31,7 @@ public class RewardBestowment : MonoBehaviour
 
     private void Awake()
     {
+        sleepyLangScore = FindObjectOfType<ScoreManager>();
         animator = GetComponent<Animator>();
         timer = FindObjectOfType<PlayerMove>();
         parent = GetComponentInParent<Transform>();
@@ -76,6 +80,10 @@ public class RewardBestowment : MonoBehaviour
             animator.SetBool("Captured", captured);
         }
         
+
     }
-    
+    private void OnDestroy()
+    {
+        sleepyLangScore.Sleepiness();
+    }
 }
