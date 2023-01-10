@@ -166,17 +166,7 @@ public class PlayerMove : MonoBehaviour
         rgbd.velocity = new Vector3(moveDirection.x * speed, moveDirection.y, moveDirection.z * speed);
         }
 
-        //the condition makes it possible for the player to turn while moving toward direction of movement but stay in the last angle registred on Idle
-        if (axisX != 0 || axisZ != 0)
-        { 
-            //to rotate body to wanted point relative to camera 
-            rotationLookAt = Quaternion.LookRotation(new Vector3(moveDirection.x, 0, moveDirection.z));
-            rgbd.MoveRotation(rotationLookAt);
-
-            //to regulate the speed of rotation
-            turnSpeed = Quaternion.RotateTowards(rgbd.rotation, rotationLookAt, rotationSpeed * Time.fixedDeltaTime);
-            rgbd.rotation = turnSpeed;
-        }
+       
 
         #region Obsolete movement code and Reason
         //* Tried another way to correct movement on moving plateform : did not work properly for intended
@@ -203,13 +193,14 @@ public class PlayerMove : MonoBehaviour
 
     }
 
+    
     //this is to make sure it fall if no contact with ground
     private void OnCollisionStay(Collision collision)
     {
         //if Grounded transform of player becomes child to plateform : Resolve issue of staying on Moving plateforms
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            transform.SetParent(collision.gameObject.transform, true);
+          //  transform.SetParent(collision.gameObject.transform, true); => Used in plateformer to have ,ormal mouvements  on mouving plateforms
             isGrounded = true;
             isMoving = true;
         }
@@ -272,7 +263,7 @@ public class PlayerMove : MonoBehaviour
         //Jump
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            //transform.SetParent(null, true);=> deleted was used for obsolete movement code
+            transform.SetParent(null, true);
             isJumping = true;
             isMoving = true;
             rgbd.AddForce(Vector2.up * jumpForce, ForceMode.Impulse);
@@ -286,7 +277,7 @@ public class PlayerMove : MonoBehaviour
         //Jump +land (can move in air for jump duration)
         if (rgbd.position.y >= onTheGround.y + 0.2f && timer > lastJump && timer < lastJump + jumpDuration && rgbd.velocity.y != 0)
         {
-            // transform.SetParent(null, true);=> deleted was used for obsolete movement code
+            transform.SetParent(null, true);
             isJumping = true;
             isMoving = true;
             isFalling = false;
@@ -298,7 +289,7 @@ public class PlayerMove : MonoBehaviour
         //
         if (rgbd.position.y >= onTheGround.y + 0.3f && timer > lastJump && timer > lastJump + jumpDuration + moveInAir && rgbd.velocity.y != 0)
         {
-            // transform.SetParent(null, true);=> deleted was used for obsolete movement code
+            transform.SetParent(null, true);
             isJumping = false;
             isMoving = false;
             isFalling = false;
@@ -310,7 +301,7 @@ public class PlayerMove : MonoBehaviour
         //Fall+land can move
         if ((rgbd.position.y >= onTheGround.y + 0.3f || rgbd.position.y <= onTheGround.y - 0.3f) && timer > lastJump + jumpDuration && !isJumping && timer <= startFall+moveInAir )
         {
-            //transform.SetParent(null, true);=> deleted was used for obsolete movement code
+            transform.SetParent(null, true);
             isMoving = true;
             startFall = Time.time;
             rgbd.AddForce(Vector3.down * downForce);

@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameOverScript : MonoBehaviour
 {
     #region Retrieved On Awake
-    PlayerMove[] player;
+    PlayerMove player;
     GameObject canvas;
     #endregion
 
@@ -16,7 +16,7 @@ public class GameOverScript : MonoBehaviour
 
     void Awake()
     {
-        player = FindObjectsOfType<PlayerMove>();
+        player = FindObjectOfType<PlayerMove>();
         canvas = GameObject.Find("CanvasGameOver");
         canvas.SetActive(false);
     }

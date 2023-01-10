@@ -52,11 +52,11 @@ public class ThunderAction : MonoBehaviour
             Spawn();
         }
     }
-
+    
     private void Spawn()
     {
-        spawnPos = Random.insideUnitSphere * circleSpawnRadius;
-        Instantiate(thunder, spawnPos + transform.position, Quaternion.identity, transform);
+        spawnPos = Random.onUnitSphere * circleSpawnRadius;
+        Instantiate(thunder, spawnPos + transform.position, Quaternion.identity);
         thunderLvlAtTimeX++;
         lastSpawn = Time.time;
     }
