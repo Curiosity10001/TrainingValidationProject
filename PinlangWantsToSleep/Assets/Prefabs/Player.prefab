@@ -77,11 +77,11 @@ MonoBehaviour:
   isMoving: 0
   jumpForce: 10
   isJumping: 0
-  jumpDuration: 0.03
-  downForce: 10
+  jumpDuration: 0.5
+  downForce: 13
   isFalling: 0
   isGrounded: 0
-  maxDistance: 20
+  maxDistance: 10
   frontRightRay: {fileID: 2336962312473650321}
   frontLeftRay: {fileID: 9096970640396139368}
   backRightRay: {fileID: 6126008557600453390}
@@ -364,7 +364,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 114
+  m_VersionIndex: 105
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -12135,7 +12135,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 4984
+  m_VersionIndex: 4975
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
