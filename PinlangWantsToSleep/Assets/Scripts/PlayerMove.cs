@@ -143,29 +143,8 @@ public class PlayerMove : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        //the condition makes it possible for the player to turn while moving toward direction of movement but stay in the last angle registred on Idle
-        if (axisX != 0 || axisZ != 0)
-        {
-            //to rotate body to wanted point relative to camera 
-            rotationLookAt = Quaternion.LookRotation(new Vector3(moveDirection.x, 0, moveDirection.z));
-            rgbd.MoveRotation(rotationLookAt);
 
-            //to regulate the speed of rotation
-            turnSpeed = Quaternion.RotateTowards(rgbd.rotation, rotationLookAt, rotationSpeed * Time.fixedDeltaTime);
-            rgbd.rotation = turnSpeed;
-        }
-
-        //Direction of movement relative to Camera
-        moveDirection = Camera.main.transform.right * axisX + Camera.main.transform.forward * axisZ;
-
-        // As long as nothing impact velocity the rigidbodystays on ground
-        moveDirection.y = rgbd.velocity.y;
-        if(isMoving)
-        {
-        //No parent movement
-        rgbd.velocity = new Vector3(moveDirection.x * speed, moveDirection.y, moveDirection.z * speed);
-        }
-
+        GroundMove();
        
 
         #region Obsolete movement code and Reason
@@ -193,7 +172,31 @@ public class PlayerMove : MonoBehaviour
 
     }
 
-    
+    public void GroundMove()
+    {
+        //the condition makes it possible for the player to turn while moving toward direction of movement but stay in the last angle registred on Idle
+        if (axisX != 0 || axisZ != 0)
+        {
+            //to rotate body to wanted point relative to camera 
+            rotationLookAt = Quaternion.LookRotation(new Vector3(moveDirection.x, 0, moveDirection.z));
+            rgbd.MoveRotation(rotationLookAt);
+
+            //to regulate the speed of rotation
+            turnSpeed = Quaternion.RotateTowards(rgbd.rotation, rotationLookAt, rotationSpeed * Time.fixedDeltaTime);
+            rgbd.rotation = turnSpeed;
+        }
+
+        //Direction of movement relative to Camera
+        moveDirection = Camera.main.transform.right * axisX + Camera.main.transform.forward * axisZ;
+
+        // As long as nothing impact velocity the rigidbodystays on ground
+        moveDirection.y = rgbd.velocity.y;
+        if (isMoving)
+        {
+            //No parent movement
+            rgbd.velocity = new Vector3(moveDirection.x * speed, moveDirection.y, moveDirection.z * speed);
+        }
+    }
     //this is to make sure it fall if no contact with ground
     private void OnCollisionStay(Collision collision)
     {
