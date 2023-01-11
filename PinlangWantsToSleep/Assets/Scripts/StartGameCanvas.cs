@@ -36,10 +36,9 @@ public class StartGameCanvas : MonoBehaviour
     }
     public void StartGame()
     {
-        //Restart game/level
+        //start game/level
         SceneManager.LoadScene("LevelOne");
         playerMove.gameObject.GetComponent<PlayerMove>().enabled = true;
         Time.timeScale = 1;
-        canvas.SetActive(false);
     }
 }

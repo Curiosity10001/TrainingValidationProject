@@ -42,9 +42,10 @@ public class GameOverScript : MonoBehaviour
     }
     public void RestartGame()
     {
-        //Restart game/level
+        //go to start page
         SceneManager.LoadScene("LevelOne");
         Time.timeScale = 1;
     }
-   
+
+    
 }
