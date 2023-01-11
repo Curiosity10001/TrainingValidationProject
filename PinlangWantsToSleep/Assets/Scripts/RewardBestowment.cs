@@ -17,7 +17,7 @@ public class RewardBestowment : MonoBehaviour
     [SerializeField] float deltaTimeDirectionchange = 5f;
 
     ScoreManager sleepyLangScore;
-
+    AudioSource bell;
 
     public bool captured = false;
    
@@ -36,6 +36,7 @@ public class RewardBestowment : MonoBehaviour
         timer = FindObjectOfType<PlayerMove>();
         parent = GetComponentInParent<Transform>();
         initPos = parent.transform.position;
+        bell = GetComponent<AudioSource>();
     }
     Vector3 initPos;
     Transform parent;
@@ -85,5 +86,10 @@ public class RewardBestowment : MonoBehaviour
     private void OnDestroy()
     {
         sleepyLangScore.Sleepiness();
+    }
+
+    public void PlayBell()
+    {
+        bell.Play();
     }
 }

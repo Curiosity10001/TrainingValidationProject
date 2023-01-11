@@ -71,9 +71,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timer: 0
-  speed: 10
+  speed: 15
   rotationSpeed: 2
-  moveInAir: 0.8
+  moveInAir: 0.2
   isMoving: 0
   jumpForce: 10
   isJumping: 0
@@ -364,7 +364,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 99
+  m_VersionIndex: 114
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -12135,7 +12135,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 4966
+  m_VersionIndex: 4984
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []

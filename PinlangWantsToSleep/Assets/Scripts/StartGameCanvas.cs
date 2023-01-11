@@ -9,6 +9,7 @@ public class StartGameCanvas : MonoBehaviour
 
     #region Retrieved On Awake
     PlayerMove playerMove;
+    ScoreManager music;
     GameObject canvas;
     #endregion
 
@@ -20,6 +21,7 @@ public class StartGameCanvas : MonoBehaviour
     {
         canvas = GameObject.Find("StartCanvas");
         playerMove = FindObjectOfType<PlayerMove>();
+        music = GetComponent<ScoreManager>();
     }
     // Start is called before the first frame update
     void Start()
@@ -39,6 +41,7 @@ public class StartGameCanvas : MonoBehaviour
         //start game/level
         SceneManager.LoadScene("LevelOne");
         playerMove.gameObject.GetComponent<PlayerMove>().enabled = true;
+        music.gameObject.GetComponent<AudioSource>().enabled = true;
         Time.timeScale = 1;
     }
 }
