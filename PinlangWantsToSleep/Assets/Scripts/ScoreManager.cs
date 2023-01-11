@@ -24,7 +24,7 @@ public class ScoreManager : MonoBehaviour
 
     private void Awake()
     {
-        capturedscripts = FindObjectsOfType<RewardBestowment>();
+        capturedscripts = FindObjectsOfType<RewardBestowment>(false);
         canvas = GameObject.Find("WinCanvas");
         initialScene.onClick.AddListener(InitialScene);
         nextLevel.onClick.AddListener(NextLevel);
@@ -42,31 +42,32 @@ public class ScoreManager : MonoBehaviour
     void Update()
     {
 
+        if(sleepiness >= maxSleepiness)
+        {
+            Time.timeScale = 0;
+            canvas.SetActive(true);
+        }
 
-  
+
     }
 
     public void Sleepiness()
     {
-         sleepiness += maxSleepiness / (capturedscripts.Length );
+         sleepiness += maxSleepiness / ((float)capturedscripts.Length );
          playerSleepinessBar.fillAmount = sleepiness;
-        if (sleepiness == maxSleepiness)
-        {
-            Time.timeScale = 0;
-            Debug.Log("in here");
-            canvas.SetActive(true);
-        }
-
+       
     }
     public void InitialScene()
     {
         //goes back to initial page
-        SceneManager.LoadScene("InitialScene");   
+        SceneManager.LoadScene("InitialScene");
+        Time.timeScale = 0.5f;
     }
 
     public void NextLevel()
     {
         //for now replay level one
         SceneManager.LoadScene("LevelOne");
+        Time.timeScale = 1;
     }
 }

@@ -7017,7 +7017,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
 --- !u!95 &9146552270059350921
@@ -7054,6 +7054,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speedFree: 2
   deltaTimeDirectionchange: 4
+  captured: 0
 --- !u!114 &8047307401146303417
 MonoBehaviour:
   m_ObjectHideFlags: 0
